@@ -27,7 +27,7 @@ def image_to_tfrecord(image_path, tfrecord_path):
             #try...except 添加报错机制，防止图片损坏转换不成功
             try:
                 #添加显示进度信息
-                print('\r>> Converting image of (%s) %d/%d' % (dir_name, i+1, len(file_list)))
+                print('\r>> Converting image of (%s) %d/%d' % (dir_name, i+1, len(file_list))， end="")
                 #采用PIL模块下的Image读取图片
                 image_raw_data = Image.open(file_name)
                 #获取图片的长宽高，保存在tftecort中，以便还原图片信息使用
