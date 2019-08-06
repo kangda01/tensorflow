@@ -46,8 +46,8 @@ def partitioned_dataset(file_Dir, target_Dir):
             validation_image_names = path_dir[-validation_number:]
             
             
-            for set_name, set_name_str in [(training_image_names, "training"),
-                                           (testing_image_names, "testing"),
+            for set_name, set_name_str in [(training_image_names, "train"),
+                                           (testing_image_names, "test"),
                                     (validation_image_names, "validation")]:
                 for name in set_name:
                     i += 1
