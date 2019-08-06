@@ -4,6 +4,9 @@ import tensorflow as tf
 from PIL import Image
 import math
 
+
+'''get_images_dir函数是为了得到每个图片的具体地址，和对应的lable，
+total_image_numbers是为了计算地址下的图片总数，方便后续的命名tfrecord文件和显示操作总进度'''
 def get_images_dir(image_path):
     sub_dirs = [x[0] for x in os.walk(image_path)][1:]
     file_list = []
@@ -37,7 +40,7 @@ def image_to_tfrecord(set_name, image_path, output_path):
         if not i % 1000:
             number += 1
             tfrecord_path = os.path.join(output_path, set_name +
-                                         ('.tfrecords-%.3d-of-%.3d' % (number, tfrecords_files_numbers)))
+                                         ('-%.3d-of-%.3d.tfrecords' % (number, tfrecords_files_numbers)))
 
             writer = tf.python_io.TFRecordWriter(tfrecord_path)
         #try...except 添加报错机制，防止图片损坏转换不成功
@@ -76,17 +79,10 @@ def _bytes_feature(value):
     return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
 
 def main():
-    # image_path = r"C:\Users\kangda\Desktop\flower"
-    # tfrecord_path = r"C:\Users\kangda\Desktop\flower.tfrecords"
     image_path = r"G:\tensorflow_google\chapter_6\flower_data\flower_photos"
     output_path = r"G:\tensorflow_google\chapter_6\flower_data"
-    # a, b = get_images_dir(image_path)
     image_to_tfrecord("training", image_path, output_path)
 
 if __name__ == '__main__':
     main()
 
-# image_path = r"G:\tensorflow_google\chapter_6\flower_data\flower_photos"
-# a, b = get_images_dir(image_path)
-# for i, j in enumerate(a):
-#     print (i, j[0])
