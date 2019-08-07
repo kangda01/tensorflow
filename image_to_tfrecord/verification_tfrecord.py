@@ -1,5 +1,11 @@
 import tensorflow as tf
+import  glob
+from PIL import Image
+import os.path
 
+train_files = glob.glob(r"G:\tensorflow_google\chapter_6\flower_data\training-*")
+test_files = glob.glob(r"G:\tensorflow_google\chapter_6\flower_data\testing-*")
+verification_files = glob.glob(r"G:\tensorflow_google\chapter_6\flower_data\verification-*")
 def parser(record):
     features = tf.parse_single_example(record,
                     features={'label': tf.FixedLenFeature([], tf.int64),
@@ -20,23 +26,23 @@ def parser(record):
     label = tf.cast(features['label'],tf.int32)
     return image, label
 
+
+
 data_dir = tf.placeholder(tf.string)
 dataset = tf.data.TFRecordDataset(data_dir)
 dataset = dataset.map(parser)
+# dataset = dataset.shuffle(buffer_size=10000).batch(100)
 iterator = dataset.make_initializable_iterator()
 image, label = iterator.get_next()
+
+
 with tf.Session() as sess:
     sess.run(iterator.initializer,
-             feed_dict={data_dir:r"C:\Users\kangda\Desktop\flower.tfrecords"})
-
-    # for i in range(10):
-    #     print(i, sess.run([image, label]), image.shape)
-
-    # i = 0
-    # while 1:
-    #     i += 1
-    #     try:
-    #         print(i, sess.run([image, label]))
-    #     except tf.errors.OutOfRangeError:
-    #         print("end")
-    #     break
+             feed_dict={data_dir:train_files})
+    #验证tfrecord文件生成的数据是否正确
+    for i in range(3000):
+        mat, aa = sess.run([image, label])
+        if i % 300 == 0:
+            # image1 = Image.fromarray(mat.astype('uint8'),'RGB')
+            image1 = Image.fromarray(mat.astype('uint8'))
+            image1.save(os.path.join(r"C:\Users\kangda\Desktop\111" ,str(i) + '.jpg'))
